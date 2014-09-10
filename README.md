@@ -345,7 +345,7 @@ Markdown [code span][] element syntax (`` ` ` ``) is used to escape names and li
 
 ---
 
-## Mutliline Description
+## Multiline Description
 In the case where a one-liner description is not sufficient, a multi-paragraph list item is the way to go.
 
 #### MSON
