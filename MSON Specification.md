@@ -6,33 +6,34 @@ combinations thereof built from a limited set of _[Base Types][]_:
 
 - Named Types
 
-  ```
-  # Person (object)
-  An individual.
+    ```
+    # Person (object)
+    An individual.
 
-  ## Properties
-  - first_name
-  - last_name
-  - address
-    - city
-    - street
-  ```
-
-- Member Types
-  ```
-  - person (object) - An individual
+    ## Properties
     - first_name
     - last_name
     - address
-      - city
-      - street
-  ```
+        - city
+        - street
+    ```
 
-  or, equivalently:
+- Member Types
 
-  ```
-  - person (Person) - A person
-  ```
+    ```
+    - person (object) - An individual
+        - first_name
+        - last_name
+        - address
+            - city
+            - street
+    ```
+
+    or, equivalently:
+
+    ```
+    - person (Person) - A person
+    ```
 
 ## 1 How to Read the Grammar
 - An arrow (→) mark grammars productions that can be read as "is defined by|is defined by a(n)"
@@ -98,10 +99,10 @@ _Member Type_ ⇒ _[Nested Member Types][]_ _[opt]_
 
 ```
 - person (object) - An individual
-  - name (string)
+    - name (string)
 - city (enum) - A particular city
-  - San Francisco
-  - New York
+    - San Francisco
+    - New York
 ```
 
 ### 3.1 Property Member Type
@@ -123,9 +124,9 @@ By default:
 
 ```
 - person (object) - A person
-  - first_name
-  - last_name
-  - address
+    - first_name
+    - last_name
+    - address
 - company (string)
 ```
 
@@ -165,8 +166,8 @@ _Value Member Type_ ⇒ _[Samples][]_ _[opt]_
 
 ```
 - colors (array)
-  - red (string) - A sample value
-  - green (string)
+    - red (string) - A sample value
+    - green (string)
 ```
 
 The optional `-` is only applicable in the case where a _[Description][]_ is provided.
@@ -274,65 +275,65 @@ Defines extra attributes associated with the implementation of a type.
 
 By default:
 
-  - If a _[Named Type][]_ or _[Member Type][]_ annotates its type as `fixed`, all _[Nested Member Types][]_ inherit
-  the `fixed` attribute as well.
+- If a _[Named Type][]_ or _[Member Type][]_ annotates its type as `fixed`, all _[Nested Member Types][]_ inherit
+the `fixed` attribute as well.
 
-  ```
-  - person (object, fixed)
-    - name
-  ```
+    ```
+    - person (object, fixed)
+        - name
+    ```
 
-  Implies:
+    Implies:
 
-  ```
-  - person (object, fixed)
-    - name (fixed)
-  ```
+    ```
+    - person (object, fixed)
+        - name (fixed)
+    ```
 
-  - An `array` based _[Named Type][]_ or _[Member Type][]_ MAY specify `fixed` to indicate the structure is a "fixed list" of
+- An `array` based _[Named Type][]_ or _[Member Type][]_ MAY specify `fixed` to indicate the structure is a "fixed list" of
   only the specified values, if any, of its _[Nested Member Types][]_.
 
-  ```
-  - colors (array, fixed)
-    - red
-    - green
-  ```
+    ```
+    - colors (array, fixed)
+        - red
+        - green
+    ```
 
-  Implies a fixed-list `array` structure that MUST only contain the two items "red" and "green".
+    Implies a fixed-list `array` structure that MUST only contain the two items "red" and "green".
 
-  - An `object` based _[Named Type][]_ or _[Member Type][]_ MAY specify `fixed` to indicate a "value object" where all
-  the properties MUST be present and the values of the properties MUST be the values specified, if any, in its
-  _[Nested Member Types][]_.
+- An `object` based _[Named Type][]_ or _[Member Type][]_ MAY specify `fixed` to indicate a "value object" where all
+the properties MUST be present and the values of the properties MUST be the values specified, if any, in its
+_[Nested Member Types][]_.
 
-  ```
-  - person (object, fixed)
-    - first_name: Andrew
-    - last_name: Smith
-  ```
+    ```
+    - person (object, fixed)
+        - first_name: Andrew
+        - last_name: Smith
+    ```
 
-  Implies a "value object" that MUST contain the properties "first_name" and "last_name" with the values
-  "Andrew" and "Smith", respectively.
+    Implies a "value object" that MUST contain the properties "first_name" and "last_name" with the values
+    "Andrew" and "Smith", respectively.
 
-  - Individual _[Nested Member Types][]_ MAY override inherited behavior from a `fixed` inherited type
-  by using an `optional` attribute and/or MAY indicate values are samples using a _[Variable Value][]_.
+- Individual _[Nested Member Types][]_ MAY override inherited behavior from a `fixed` inherited type
+by using an `optional` attribute and/or MAY indicate values are samples using a _[Variable Value][]_.
 
-  ```
-  - person (object, fixed)
-    - first_name
-    - last_name (optional)
-  ```
+    ```
+    - person (object, fixed)
+        - first_name
+        - last_name (optional)
+    ```
 
-  Implies a "value object" that MUST contain the property "first_name" and MAY contain the property
-  "last_name".
+    Implies a "value object" that MUST contain the property "first_name" and MAY contain the property
+    "last_name".
 
-  ```
-  - colors (array, fixed)
-    - red
-    - *green*
-  ```
+    ```
+    - colors (array, fixed)
+        - red
+        - *green*
+    ```
 
-  Implies an `array` type structure that MUST contain "red" as an item and MAY contain any other strings, where
-  "green" is a sample value.
+    Implies an `array` type structure that MUST contain "red" as an item and MAY contain any other strings, where
+    "green" is a sample value.
 
 #### 3.2.4 Description
 Describes a _[Member Type][]_ in-line.
@@ -423,61 +424,62 @@ of the _Nested Member Types_ list.
         - there
 
         - Properties
-          - first_name
-          - last_name
+            - first_name
+            - last_name
     ```
 
 By Default:
-  - Un-nested Member Types
 
-      A _[Member Type][]_ that does not contain _Nested Member Types_ and does not contain a _[Type Definition][]_
-      implies a `string` _[Type Specification][]_.
+- Un-nested Member Types
 
-      ```
-      - count: 1
-      ```
+    A _[Member Type][]_ that does not contain _Nested Member Types_ and does not contain a _[Type Definition][]_
+    implies a `string` _[Type Specification][]_.
 
-      Implies:
+    ```
+    - count: 1
+    ```
 
-      ```
-      - count: 1 (string)
-      ```
+    Implies:
 
-  - Object Structures
+    ```
+    - count: 1 (string)
+    ```
 
-      A _[Property Member Type][]_ without a _[Type Definition][]_ that contains _[Nested Member Types][]_ implies
-      an `object` type structure.
+- Object Structures
 
-      ```
-      - address
+    A _[Property Member Type][]_ without a _[Type Definition][]_ that contains _[Nested Member Types][]_ implies
+    an `object` type structure.
+
+    ```
+    - address
         - city
         - state
-      ```
+    ```
 
-      Implies:
+    Implies:
 
-      ```
-      - address (object)
+    ```
+    - address (object)
         - city
         - state
-      ```
+    ```
 
-  - Array Structures
+- Array Structures
 
-      A _[Member Type][]_ with an `array` _[Type Definition][]_ that contains _[Nested Member Types][]_
-      specifies an `array` type structure that MAY contain items of the specified type and
-      sample values per the particular _[Value Definition][]_.
+    A _[Member Type][]_ with an `array` _[Type Definition][]_ that contains _[Nested Member Types][]_
+    specifies an `array` type structure that MAY contain items of the specified type and
+    sample values per the particular _[Value Definition][]_.
 
-      ```
-      - colors (array)
+    ```
+    - colors (array)
         - red (string)
         - 5 (number)
-      ```
+    ```
 
-      Implies an `array` structure whose individual items MAY be strings or numbers with sample values "red" and "5",
-      respectively.
+    Implies an `array` structure whose individual items MAY be strings or numbers with sample values "red" and "5",
+    respectively.
 
-  - Enum Structures
+- Enum Structures
 
     A _[Member Type][]_ with an `enum` _[Type Definition][]_ that contains _[Nested Member Types][]_
     specifies an `enum` type structure that MUST only contain items of the specified type and
@@ -485,8 +487,8 @@ By Default:
 
     ```
     - colors (enum)
-      - red (string)
-      - 5 (number)
+        - red (string)
+        - 5 (number)
     ```
 
     Implies a `colors` _[Property Member Type][]_ that MUST only have a value of the string "red" or the number 5.
@@ -496,8 +498,8 @@ By Default:
 
     ```
     - colors (enum)
-      - red (string)
-      - *5* (number)
+        - red (string)
+        - *5* (number)
     ```
 
     Implies Implies a `colors` _[Property Member Type][]_ that MUST have either the string "red" or any number as
@@ -594,16 +596,16 @@ And:
 
 ```
 - person (Person)
-  - address
+    - address
 ```
 
 Implies the same structure as:
 
 ```
 - person (object)
-  - first_name
-  - last_name
-  - address
+    - first_name
+    - last_name
+    - address
 ```
 
 Where the inherited _[Member Types][]_ from `Person` _[Named Type][]_ are listed first.
@@ -624,34 +626,34 @@ And:
 
 ```
 - formal_person (object)
-  - prefix: Mr
-  - Include Person
+    - prefix: Mr
+    - Include Person
 ```
 
 Implies the same structure as:
 
 ```
 - formal_person (object)
-  - prefix: Mr
-  - first_name
-  - last_name
+    - prefix: Mr
+    - first_name
+    - last_name
 ```
 ---
 Alternately:
 
 ```
 - formal_person (object)
-  - Include Person
-  - prefix: Mr.
+    - Include Person
+    - prefix: Mr.
 ```
 
 Implies the same structure as:
 
 ```
 - formal_person (object)
-  - first_name
-  - last_name
-  - prefix: Mr.
+    - first_name
+    - last_name
+    - prefix: Mr.
 ```
 
 ## 5.2 One Of Type
@@ -671,10 +673,10 @@ of the _[Nested Member Types][]_ list.
 ```
 - first_name
 - One Of
-  - last_name
-  - One of
-    - given_name: Smith
-    - suffixed_name: Smith, Sr.
+    - last_name
+    - One of
+        - given_name: Smith
+        - suffixed_name: Smith, Sr.
 ```
 
 Implies values with a structure of:
@@ -712,30 +714,34 @@ _[Member Type][]_.
 
 - Add/Override Attributes
 
+    _Example 1_
+
     ```
     - person (Person)
-      - last_name (optional)
+        - last_name (optional)
     ```
 
     Is literally the same as:
 
     ```
     - person (object, fixed)
-      - first_name (fixed)
-      - last_name (fixed)
-      - address (object, fixed)
-      - last_name (optional)
+        - first_name (fixed)
+        - last_name (fixed)
+        - address (object, fixed)
+        - last_name (optional)
     ```
 
     Which implies a structure the same as:
 
     ```
     - person (object, fixed)
-      - first_name (fixed)
-      - last_name (optional)
-      - address (object, fixed)
+        - first_name (fixed)
+        - last_name (optional)
+        - address (object, fixed)
     ```
-    ---
+
+    _Example 2_
+
     ```
     - person (object)
         - first_name (optional)
@@ -746,25 +752,27 @@ _[Member Type][]_.
 
     ```
     - person (object, fixed)
-      - first_name (optional)
-      - first_name (fixed)
-      - last_name (fixed)
-      - address (object, fixed)
+        - first_name (optional)
+        - first_name (fixed)
+        - last_name (fixed)
+        - address (object, fixed)
     ```
 
     Which implies a structure the same as:
 
     ```
     - person (object, fixed)
-      - first_name (fixed)
-      - last_name (fixed)
-      - address (object, fixed)
+        - first_name (fixed)
+        - last_name (fixed)
+        - address (object, fixed)
     ```
-    ---
+
+    _Example 3_
+
     ```
     - person (object)
-      - Include Person
-      - first_name (optional)
+        - Include Person
+        - first_name (optional)
 
     ```
 
@@ -772,63 +780,64 @@ _[Member Type][]_.
 
     ```
     - person (object, fixed)
-      - first_name (fixed)
-      - last_name (fixed)
-      - address (object, fixed)
-      - first_name (optional)
+        - first_name (fixed)
+        - last_name (fixed)
+        - address (object, fixed)
+        - first_name (optional)
     ```
 
     Implies a structure the same as:
 
     ```
     - person (object)
-      - first_name (optional)
-      - last_name (fixed)
-      - address (object, fixed)
+        - first_name (optional)
+        - last_name (fixed)
+        - address (object, fixed)
     ```
 
 - Add New Member Types
 
     ```
     - person (Person)
-      - citizenship
+        - citizenship
     ```
 
     Implies a structure the same as:
 
     ```
     - person (object, fixed)
-      - first_name
-      - last_name
-      - address (object)
-      - citizenship
+        - first_name
+        - last_name
+        - address (object)
+        - citizenship
     ```
 
 - Override Member Types
+
     ```
-     - person (object)
-       - Include Person
-       - address (string)
-     ```
+    - person (object)
+        - Include Person
+        - address (string)
+    ```
 
-      Is literally the same as:
+    Is literally the same as:
 
-     ```
-     - person (object, fixed)
-       - last_name (fixed)
-       - address (object, fixed)
-       - first_name (optional)
-       - address (string)
-     ```
+    ```
+    - person (object, fixed)
+        - last_name (fixed)
+        - address (object, fixed)
+        - first_name (optional)
+        - address (string)
+    ```
 
-     Implies a structure the same as:
+    Implies a structure the same as:
 
-     ```
-     - person (object)
-       - first_name (fixed)
-       - last_name (fixed)
-       - address (string)
-     ```
+    ```
+    - person (object)
+        - first_name (fixed)
+        - last_name (fixed)
+        - address (string)
+    ```
 
 ## 6 Reserved Characters & Keywords
 When using following characters or keywords in an _Property Name_, Literal Value or _Type Name_ the name or literal
