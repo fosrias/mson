@@ -1,221 +1,905 @@
 # MSON Specification
-Markdown Syntax for Object Notation (MSON) is a plain text syntax for the description and validation of data structures.
+Markdown Syntax for Object Notation (MSON) is a plain-text syntax for the description and validation of data structures.
 
-In MSON, data structures are described as compound types. Elements of these compound types can be themselves instances of other types.
-
-## How to Read the Grammar
-- An arrow (→) is used to mark grammar productions and can be read as "can consist of".
-- Syntactic categories are indicated by _italic_ text
-- Literal words and punctuations are indicated by a `code span`
-- Alternative grammar productions are separated by vertical bars (|)
-- Optional syntactic categories and literals are marked by _[italic text in square brackets]_
-- Grammar production can span several lines and ends at another grammar production and/or the end of a paragraph.
-
-## Markdown Syntax
-Note this reference is using ATX-style headers (#) and hyphens-style lists (-) exclusively. However you MAY use Setext-style headers and/or asterisk (*) or pluses (+) style list if you prefer.
-
-## Types
+In MSON, data structures are described by header-defined _[Named Types][]_ and/or list-defined _[Member Types][]_ and/or
+combinations thereof built from a limited set of _[Base Types][]_:
 
 - Named Types
 
-    - Built-in
+  ```
+  # Person (object)
+  An individual.
 
-        MSON provides following pre-defined named types:
+  ## Properties
+  - first_name
+  - last_name
+  - address
+    - city
+    - street
+  ```
 
-        - Primitive Types
+- Member Types
+  ```
+  - person (object) - An individual
+    - first_name
+    - last_name
+    - address
+      - city
+      - street
+  ```
 
-            - `Boolean` or `Boolean`
-            - `String`
-            - `Number`
+  or, equivalently:
 
-        - Compound Types
+  ```
+  - person (Person) - A person
+  ```
 
-            - `Array`
-            - `Enumeration` or `Enum`
-            - `Object`
-    
-    - User-defined 
+## 1 How to Read the Grammar
+- An arrow (→) mark grammars productions that can be read as "is defined by|is defined by a(n)"
+- A double arrow (⇒) marks grammar productions that can be read as "contains|contains a(n)"
+- _Italic_ text indicates syntactic categories
+- A `code span` indicates literal words and punctuations
+- A pipe character (|) separates alternative grammar productions
+- A following _[opt]_ indicates optional syntactic categories and literals
+- Grammar productions can span several lines and end at another grammar production and/or the end of a paragraph
 
-        See _[Named Type Definition]()_.
+### 1.1 Markdown Syntax
+Note this reference is using ATX-style headers (#) and hyphens-style lists (-) exclusively. However you MAY use
+Setext-style headers and/or asterisk (*) or pluses (+) style lists if you prefer.
 
-- Unnamed Types
+### 1.2 Notational Conventions
+The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "MAY", and
+"OPTIONAL" in this document are to be interpreted as described in [RFC2119][].
 
-    To be decided.
+## 2 Base Types
+MSON defines a number of distinct base _[Primitive][]_ and _[Structure Types][]_ from which all MSON data structures are
+built. Users may extend these [Base Types][] to define new [Named Types][] that MAY be used to build other
+[Named Types][] and/or [Member Types][].
 
-    - Compound Types
-        
-        - Tuple
+#### 2.1 Primitive Types
+Applies to basic data structure and type definitions. _[Named Types][]_ and _[Member Types][]_ built directly, or
+indirectly, from _Primitive Types_ MUST NOT contain _[Nested Member Types][]_.
 
-## Element
-Element of a compound type.
+- `boolean` or `Boolean`
 
-_Element_ → _[Array Element]()_ | _[Object Element]()_ | _[Enumeration Element]()_
+    Specifies a type with allowed values of `true` or `false`.
 
-_Array Element_ → _[Item Element]()_ | _[Element Mixin]()_
+- `string`  or `String`
 
-_Object Element_ → _[Property Element]()_ | _[Element Mixin]()_
+    Specifies any string.
 
-_Enumeration Element_ → _[Member Element]()_ | _[Element Mixin]()_
+- `number` or `Number`
 
-### Item Element
-Array Item Element – one item in an array.
+    Specifies any number.
 
-_Item Element_ → _[Type Instance]()_
+#### 2.2 Structure Types
+Applies to recursive, composite data structure and type definitions. _[Named Types][]_ and _[Member Types][]_ built
+directly, or indirectly, from _Structure Types_ MAY contain _[Nested Member Types][]_.
 
-### Property Element
-Object Property Element - one property (attribute) of an object. _Property Name_ is a fully-fledged _Type Instance_.
+- `array` or `Array`
 
-_Property Element_ → _[Property Name]()_ `:` _[Type Instance]()_ _[opt]_
-_Property Name_ → [Literal Value]() | _[Type Instance]()_
+    Specifies an un-ordered list of items for values.
 
-### Member Element
-Enumeration Member Element - one member of an enumeration. Enumeration _Member Value_ is a fully-fledged _Type Instance_.
+- `enum` or `Enum`
 
-_Member Element_ → _[Member Value]()_ `:` _[Type Instance]()_ _[opt]_
-_Member Value_ → [Literal Value]() | _[Type Instance]()_
+    Specifies an exclusive list of possible _[Values][]_ or types for values.
 
-### Element Mixin
-Mixin Element is a special type of _Element_ that adds _Elements_ from another compound type to the parent's _Elements_. The source and destination MUST be of the same compound type.
+- `object` or `Object`
 
-_Element Mixin_ → `- Include` _[Type Name]()_
+    Specifies a structure that contains properties as members.
 
-### Type Instance
-Define an instance of a type.
+## 3 Member Types
+Markdown lists specify MSON _Member Types_, which define the structure and types of individual members and/or
+the types of their possible values.
 
-A _Type Instance_ definition MUST include _Value_ or _Type Annotation_. _Type Instances_ of the `Object` or `Enumeration` base type MUST NOT specify a value.  A _Value_ of an instance of unspecified type MAY imply the type of the instance.
+_Member Type_ → _[Property Member Type][]_ | _[Value Member Type][]_
 
-_Type Instance_ → _[Value]()_ _[opt]_ _[Type Annotation]()_ _[opt]_ `-` _[Description]()_ _[opt]_
+_Member Type_ ⇒ _[Nested Member Types][]_ _[opt]_
 
-_[Additional Description]()_ _[opt]_
+```
+- person (object) - An individual
+  - name (string)
+- city (enum) - A particular city
+  - San Francisco
+  - New York
+```
 
-_[Instance Elements]()_ _[opt]_
+### 3.1 Property Member Type
+Defines individual members of `object` type structures.
 
-_[Validations]()_ _[opt]_ _– to be decided_
+_Property Member Type_ → `-` _[Property Name][]_ `:` _[opt]_ _[Value Definition][]_ _[opt]_ `-` _[opt]_ _[Description][]_ _[opt]_
 
-### Value
-Based on the _Type Instance_ the _Value_ syntax is:
+_Property Member Type_ ⇒ _[Block Description][]_ _[opt]_
 
-_Value_ → _[Array Values List]()_ | _[Primitive Value]()_
+_Property Member Type_ ⇒ _[Nested Member Types][]_ _[opt]_
 
-_Array Values List_ → _[Value]()_ | _[Value]()_`,` _[Array Values List]()_
+_Property Member Type_ ⇒ _[Samples][]_ _[opt]_
 
-_Primitive Value_ → [Literal Value]()
+_Property Member Type_ ⇒ _[Validations][]_ _[opt]_
 
-### Type Annotation
-Type annotation explicitly specifies the type of an MSON instance.
+By default:
+- The optional `:` is only applicable in the case where a _[Value Definition][]_ is present and includes a _[Value][]_.
+- Any list of _Property Member Types_ collectively MAY define an implied parent `object` type structure.
 
-_Type Annotation_ → `(`_[Type Attributes List]()_ _[opt]_`,` _[Type Specifications List]()_`)`
+```
+- person (object) - A person
+  - first_name
+  - last_name
+  - address
+- company (string)
+```
 
-_Type Attributes List_ → _[Type Attribute]()_ | _[Type Attribute]()_`,` _[Type Attributes List]()_
+Defines a `person` _Property Member Type_ with a value that is an explicit `object` type structure with members
+`first_name`, `last_name`, and `address` and, at the same time, is a member together with `company` of another
+implied `object` structure.
 
-_Type Specifications List_ →  _[Type Specification]()_ | _[Type Specification]()_`,` _[Type Specifications List]()_
+#### 3.1.1 Property Name
+Defines the name of a property in an `object` type structure.
 
-_Type Specification_ → _[Type Name]()_`:` _[Type Specifications List]()_ _[opt]_ 
+_Property Name_ → _[Literal Value][]_ | _[Variable Value][]_
 
-### Type Attribute
+```
+- customer (object)
+```
+
+Defines a _[Property Member Type][]_ with a _Property Name_ "customer".
+
+```
+- *rel* (string)
+```
+When a _Property Name_ is a _[Variable Value][]_, it indicates a property MAY have an arbitrary name and the
+specified _Property Name_ is then a sample. In the prior example, a _Property Member Type_ for a `string` type is defined
+with an arbitrary name and a sample value of "rel".
+
+### 3.2 Value Member Type
+Defines value type structures. A _Value Type Member_ MUST only be used to define structures of `array` or `enum`
+_[Member Types][]_.
+
+_Value Member Type_ → `-` _[Value Definition][]_ _[opt]_ `-` _[opt]_ _[Description][]_ _[opt]_
+
+_Value Member Type_ ⇒ _[Block Description][]_ _[opt]_
+
+_Value Member Type_ ⇒ _[Nested Member Types][]_ _[opt]_
+
+_Value Member Type_ ⇒ _[Samples][]_ _[opt]_
+
+```
+- colors (array)
+  - red (string) - A sample value
+  - green (string)
+```
+
+The optional `-` is only applicable in the case where a _[Description][]_ is provided.
+
+#### 3.2.1 Value Definition
+Every _[Member Type][]_ specifies type information associated with values in a structure or member in a structure.
+This _Value Definition_ information may include literal or sample _[Values][]_ and a _[Type Definition]_, including a
+_[Type Specification][]_ and/or _[Type Attributes][]_, of associated types.
+
+_Value Definition_ → _[Value][]_ _[opt]_ _[Type Definition][]_ _[opt]_
+
+A _Value Definition_ of an `object` _[Member Type][]_ MUST NOT specify a _[Value][]_.
+
+```
+5, 6 (array)
+```
+
+Defines a _Value Definition_ for an `array` type structure with sample values "5" and "6".
+
+#### 3.2.2 Value
+Defines either a sample or actual value(s) in a _[Member Type][]_ based on the associated _[Type Definition][]_ in a
+_[Value Definition][]_.
+
+_Value_ → _[Literal Value][]_ | _[Variable Value][]_ | _Values List_
+
+_Values List_ → _Value_ | _Value_`,` _Values List_
+
+A _Value_ MAY be a _Values List_ if the associated type structure is an `array` or `enum` type structure.
+
+```
+green, red
+```
+
+Defines sample values for an `array` type structures or fully-qualified values for an `enum` type
+structure. A _Values List_ MUST only be used with an `array` or `enum` _Structure Type_ or a _[Custom Type][]_ derived
+from a _Structure Type_.
+
+##### 3.2.2.1 Literal Value
+Literal value of a type instance. Some limitations apply (see [Reserved Characters & Keywords][]).
+
+```
+5
+```
+
+A _[Value][]_ in a _[Value Definition][]_ with an unspecified type MAY imply the type of the related _[Member Type][]_,
+for example `number` in this example.
+
+##### 3.2.2.2 Variable Value
+Defines a _[Value][]_ that is not concrete and specifies a variable _[Property Name][]_ or sample value
+indicated using Markdown *italics*.
+
+_Variable Value_ → `*`_[Literal Value][]_`*` | `*`_[Value Definition][]_`*`
+
+```
+*rel*
+```
+
+In the case of specifying a variable _[Property Name][]_, the _Variable Value_ MAY reference a _[Named Type][]_
+that MUST inherit from a `string` type, e.g. to specify a pattern for the variable value.
+
+```
+*rel (Custom String)* (object)
+```
+
+Where `rel` is a sample value for the _[Property Name][]_ of a _[Property Member Type][]_.
+
+#### 3.2.3 Type Definition
+Explicitly specifies the type of an value in an MSON instance.
+
+_Type Definition_ → `(`_[Type Specification][]_ _[opt]_ `,` _[opt]_ _Type Attributes List_ _[opt]_`)`
+
+_Type Attributes List_ → _[Type Attribute][]_ | _[Type Attribute][]_`,` _Type Attributes List_
+
+A _Type Definition_ MUST separate multiple items with a `,`.
+
+```
+(enum, optional)
+```
+
+##### 3.2.3.1 Type Specification
+
+_Type Specification_ → _[Type Name][]_ | _[Type Name][]_`[`_Type Name List_`]`
+
+_Nested Type Name List_ →  _[Type Name][]_ | _[Type Name][]_`,` _Nested Type Name List_
+
+An `array` or `enum` _[Value Definition][]_ MAY specify the _Type Specifications_ of implied
+_[Nested Member Types][]_ members in-line using `[]` as a _Nested Type Name List.
+
+```
+array[number, string]
+```
+
+Indicates a `array` type structure MAY include distinct numbers or strings as values.
+
+##### 3.2.3.2 Type Name
+References the name of a type in _[Base Types][]_ or _[Named Types][]_. Some limitations apply (see
+[Reserved Characters & Keywords][]).
+
+##### 3.2.3.3 Type Attribute
+Defines extra attributes associated with the implementation of a type.
 
 - `required` - instance of this type is required
 - `optional` - syntactic sugar for optional instance of this type
+- `fixed` - indicates the structure and values are fixed for a data structure.
 
-### Type Name
-Name of a type including built-in named types. Some limitations apply (see [Reserved Characters & Keywords]()).
+By default:
 
-### Literal Value
-Literal value of a type instance. Some limitations apply (see [Reserved Characters & Keywords]()).
+  - If a _[Named Type][]_ or _[Member Type][]_ annotates its type as `fixed`, all _[Nested Member Types][]_ inherit
+  the `fixed` attribute as well.
 
-### Description
-_Description_ → _[Markdown-formatted text]_
+  ```
+  - person (object, fixed)
+    - name
+  ```
 
-### Additional Description
-_Additional Description_ → _[Markdown-formatted text]_
+  Implies:
 
-### Instance Elements
-Define elements of a compound type instance. If preceded by an _Additional Description_ the _Instance Elements_ MUST start with _Instance Elements Delimiter_. The _Instance Elements Delimiter_ MUST be nested one additional list level under the parent's _Named Type Definition_.
+  ```
+  - person (object, fixed)
+    - name (fixed)
+  ```
 
-_Instance Elements_ → _[Instance Elements Delimiter]()_ _[opt]_ 
+  - An `array` based _[Named Type][]_ or _[Member Type][]_ MAY specify `fixed` to indicate the structure is a "fixed list" of
+  only the specified values, if any, of its _[Nested Member Types][]_.
 
-_[Elements List]()_
+  ```
+  - colors (array, fixed)
+    - red
+    - green
+  ```
 
-_Instance Elements Delimiter_ → `-` _[Elements Delimiter]()_
+  Implies a fixed-list `array` structure that MUST only contain the two items "red" and "green".
 
-### Elements Delimiter
-Based on the base type the _Elements Delimiter_ is defined as follows:
+  - An `object` based _[Named Type][]_ or _[Member Type][]_ MAY specify `fixed` to indicate a "value object" where all
+  the properties MUST be present and the values of the properties MUST be the values specified, if any, in its
+  _[Nested Member Types][]_.
 
-- `Array` base type:  
+  ```
+  - person (object, fixed)
+    - first_name: Andrew
+    - last_name: Smith
+  ```
 
-    _Elements Delimiter_ → `Elements`
+  Implies a "value object" that MUST contain the properties "first_name" and "last_name" with the values
+  "Andrew" and "Smith", respectively.
 
-- `Enumeration` base type: 
+  - Individual _[Nested Member Types][]_ MAY override inherited behavior from a `fixed` inherited type
+  by using an `optional` attribute and/or MAY indicate values are samples using a _[Variable Value][]_.
 
-    _Elements Delimiter_ → `Members`
+  ```
+  - person (object, fixed)
+    - first_name
+    - last_name (optional)
+  ```
 
-- `Object` base type: 
-    
-    _Elements Delimiter_ → `Properties`
+  Implies a "value object" that MUST contain the property "first_name" and MAY contain the property
+  "last_name".
 
-### Elements List
-List of elements of a compound type. Based on the base type the _Elements List_ is defined as follows:
+  ```
+  - colors (array, fixed)
+    - red
+    - *green*
+  ```
 
-- `Array` base type:
+  Implies an `array` type structure that MUST contain "red" as an item and MAY contain any other strings, where
+  "green" is a sample value.
 
-    _Elements List_ → 
+#### 3.2.4 Description
+Describes a _[Member Type][]_ in-line.
 
-    `-` _[Array Element]()_
+_Description_ → `-` _Markdown-formatted text_
 
-    _[Elements List]()_ _[opt]_
+```
+- name: Andrew (string) - <A Description>
+```
 
-- `Enumeration` base type:
+##### 3.2.4.1 Block Description
+Describes an _[Named Type][]_ or a _[Member Type][]_ with a nested (multi-line) text block.
 
-    _Elements List_ → 
+_Block Description_ → _Markdown-formatted text_
 
-    `-` _[Member Element]()_
+Markdown lists that are part of a _[Block Description][]_ are considered part of the block text.
 
-    _[Elements List]()_ _[opt]_
+```
+- name: Andrew (string) - <A Description>
 
-- `Object` base type:
+    An additional
+    multi-line description
 
-    _Elements List_ → 
+    - here
+    - there
+```
 
-    `-` _[Properties Element]()_
+Note that `here` and `there` are NOT _[Member Types][]_ but rather are part of a Markdown list in the
+_Block Description_.
 
-    _[Elements List]()_ _[opt]_    
+#### 3.2.5 Samples
+Defines alternate sample _[Values][]_ for _[Member Types][]_ as a nested Markdown list with (multi-line) text.
 
-## Named Type Definition
-Define a new named type based on an existing type.
+_Sample_ → `- Sample`
 
-_Named Type Definition_ → `#` _[New Type Name]()_ `(`_[Type Annotation]()_`)`
+_Sample_ ⇒ _Markdown-formatted text_
 
-_[Description]()_ _[opt]_
+```
+- colors (array)
+  - Sample
+    red
+```
 
-_[Named Type Elements]()_ _[opt]_
+#### 3.2.6 Validations
+To Be Decided.
 
-_[Validations]()_ _[opt]_ _– to be decided_
+### 3.3 Nested Member Types
+_[Named Types][]_ and _[Member Types][]_ directly, or indirectly, built from _[Structure Types][]_ MAY contain
+_Nested Member Types_, which are defined using nested Markdown lists of allowed _[Member Types][]_.
 
-_New Type Name_ → _[Type Name]()_
+A _[Member Type][]_ that contains _Nested Member Types_ defines an inner, anonymous type that specifies the structure
+of values of that particular member.
 
-### Named Type Elements
-Define elements of a compound type instance. If preceded by an _Description_ the _Named Type Elements_ MUST start with _Named Type Elements Delimiter_. The _Named Type Elements Delimiter_ SHOULD be nested one additional header level under the parent's _Type Instance_. _Elements_ MUST be nested one additional level under the _Named Type Elements Delimiter_ if present otherwise one additional level under the parent's _Type Instance_.
+_Nested Member Types_ → _nested Markdown-formatted lists of_ _[Member Types][]_ | _Member Type Group_
 
-_Instance Elements_ → _[Named Type Elements Delimiter]()_ _[opt]_ 
+_Member Type Group_ → `-` _[Member Type Separator][]_
 
-_[Elements List]()_
+_Member Type Group_ ⇒ _Nested Member Types_
 
-_Named Type Elements Delimiter_ → `##` _[Elements Delimiter]()_
+In order to specify _[Nested Member Types][]_ after a _Block Description_, a _[Named Type][]_ or a _[Member Type][]_
+MUST use an appropriate _[Member Type Separator][]_ to indicate the end of the _Block Description_ and the beginning
+of the _Nested Member Types_ list.
 
-## Reserved Characters & Keywords
-When using following characters or keywords in an _Instance Name_, Literal Value or _Type Name_ the name or literal MUST be enclosed in backticks `` ` ``.
+- Named Type
 
-### Characters
+    ```
+    ## Person (object)
+    An additional
+    multi-line description
 
-`:`, `(`,`)`, `<`, `>`, `{`, `}`, `[`, `]`, `_`, `*`, `-`, `+`, `` ` `` 
+    - here
+    - there
 
-### Keywords 
+    ## Properties
+    - first_name
+    - last_name
+    ```
 
-`Element`, `Elements`, `Property`, `Properties`, `Member`, `Members`, `Include`
+- Member Type
 
-Note keywords are case insensitive.
+    ```
+    - person (object)
 
-### Additional Keywords
+        An additional
+        multi-line description
+
+        - here
+        - there
+
+        - Properties
+          - first_name
+          - last_name
+    ```
+
+By Default:
+  - Un-nested Member Types
+
+      A _[Member Type][]_ that does not contain _Nested Member Types_ and does not contain a _[Type Definition][]_
+      implies a `string` _[Type Specification][]_.
+
+      ```
+      - count: 1
+      ```
+
+      Implies:
+
+      ```
+      - count: 1 (string)
+      ```
+
+  - Object Structures
+
+      A _[Property Member Type][]_ without a _[Type Definition][]_ that contains _[Nested Member Types][]_ implies
+      an `object` type structure.
+
+      ```
+      - address
+        - city
+        - state
+      ```
+
+      Implies:
+
+      ```
+      - address (object)
+        - city
+        - state
+      ```
+
+  - Array Structures
+
+      A _[Member Type][]_ with an `array` _[Type Definition][]_ that contains _[Nested Member Types][]_
+      specifies an `array` type structure that MAY contain items of the specified type and
+      sample values per the particular _[Value Definition][]_.
+
+      ```
+      - colors (array)
+        - red (string)
+        - 5 (number)
+      ```
+
+      Implies an `array` structure whose individual items MAY be strings or numbers with sample values "red" and "5",
+      respectively.
+
+  - Enum Structures
+
+    A _[Member Type][]_ with an `enum` _[Type Definition][]_ that contains _[Nested Member Types][]_
+    specifies an `enum` type structure that MUST only contain items of the specified type and
+    sample values per the particular _[Value Definition][]_.
+
+    ```
+    - colors (enum)
+      - red (string)
+      - 5 (number)
+    ```
+
+    Implies a `colors` _[Property Member Type][]_ that MUST only have a value of the string "red" or the number 5.
+
+    A _[Variable Value][]_ in a _[Nested Member Type][]_ under a `enum` type structure indicates an allowed type
+    with an associated sample value.
+
+    ```
+    - colors (enum)
+      - red (string)
+      - *5* (number)
+    ```
+
+    Implies Implies a `colors` _[Property Member Type][]_ that MUST have either the string "red" or any number as
+    a value, where "5" is a sample of a `number` value.
+
+#### 3.3.1 Member Type Separator
+Defines the names of separators to indicate the beginning of a section of _[Nested Member Types][]_.
+
+_Member Type Separator_ →  `Items` | `Members` | `Properties`
+
+- Array Structures - MUST use `Items` for a _Member Type Separator_
+
+- Enum Structures - MUST use `Members` for a _Member Type Separator_
+
+- Object Structures - MUST use `Properties` for a _Member Type Separator_
+
+## 4 Named Types
+Defines a new type based on an existing type using Markdown header tags.
+
+_Named Type_ → `#` _[Type Name][]_ _[Type Definition][]_ _[opt]_
+
+_Named Type_ ⇒ _[Block Descriptions][]_ _[opt]_
+
+_Named Type_ ⇒ _[Nested Member Types][]_ _[opt]_
+
+_Named Type_ ⇒ _[Named Member Types Group][]_ _[opt]_
+
+_Named Type  ⇒ _[Sample][]_
+
+_Named Type  ⇒ _[Validations][]_
+
+The above order of optional sections MUST be followed. _[Nested Member Types][]_ SHOULD be justified with the
+related header.
+
+```
+# Person (object)
+- first_name
+- last_name
+```
+
+### 4.1 Named Member Types Group
+Defines _[Nested Member Types][]_ in a _[Named Type][]_.
+
+_Named Member Types Group_ → `##` _[Member Type Separator][]_
+
+_Named Member Types Group_ ⇒ _[Nested Member Types][]_
+
+A _Named Member Types Group_ SHOULD be nested one additional header level under
+the associated _[Named Type][]_.
+
+- Without a _[Block Description][]_
+
+    _[Nested Member Types][]_ MAY be used without a _Named Member Types Group_ in a _[Named Type][]_.
+
+    ```
+    # Person (object) - Just and ordinary person
+    - first_name
+    - last_name
+    ```
+- With a _[Block Description][]_
+
+    A _Named Member Types Group_ MUST be used to define _[Nested Member Types][]_.
+
+    ```
+    # Person (object)
+    Just an ordinary person
+
+    ## Properties
+    - first_name
+    - last_name
+    ```
+
+### 4.3 Generic Named Types
+Defines a type that allows a variable _[Type Specification][]_ to be specified for the _[Named Type][]_.
+
+```
+# One or Many (enum[*T*])
+- (T)
+- array(T)
+```
+
+
+## 5 Type Inheritance
+A _[Member Type][]_ or _[Named Type][]_ that inherits from another _[Named Type][]_ also inherits any
+_[Nested Member Types][]_ in the same order they are defined in the inherited _[Named Type][]_ and in order based
+on the placement of the _Mixin Type_.
+
+```
+# Person (object)
+- first_name
+- last_name
+```
+
+And:
+
+```
+- person (Person)
+  - address
+```
+
+Implies the same structure:
+
+```
+- person (object)
+  - first_name
+  - last_name
+  - address
+```
+
+Where the inherited _[Member Types][]_ from `Person` _[Named Type][]_ are listed first.
+
+## 5.1 Mixin Type
+MSON defines a _Mixin Type_ that supports multiple inheritance from another _[Named Type][]_. _[Nested Member Types][]_
+defined in the inherited _[Named Type][]_ are added at the same indentation level of the _Mixin Type_.
+
+_Mixin Type_ → `- Include` _[Type Name][]_ | `- Include` _[Type Definition][]_ | _Mixin Type_ `-` _[Description][]_
+
+_Mixin Type_ ⇒ _[Block Description][]_
+
+```
+# Person (object)
+- first_name
+- last_name
+```
+
+And:
+
+```
+- formal_person (object)
+  - prefix: Mr
+  - Include Person
+```
+
+Implies the same structure as:
+
+```
+- formal_person (object)
+  - prefix: Mr
+  - first_name
+  - last_name
+```
+---
+Alternately:
+
+```
+- formal_person (object)
+  - Include Person
+  - prefix: Mr.
+```
+
+Implies the same structure as:
+
+```
+- formal_person (object)
+  - first_name
+  - last_name
+  - prefix: Mr.
+```
+
+## 5.2 One Of Type
+MSON defines a _One Of Type_ that can be used to describe mutually exclusive sets of _[Nested Member Types][]_. A
+_One of Type_ MUST only be used to define _[Property Member Types][]_ for a `object` type structure.
+
+_One of Type_ → `- One Of` | `- One Of` - _[Description][]_
+
+_One of Type_ ⇒ _[Block Description][]_
+
+_One of Type_ ⇒ _[Nested Member Types][]_.
+
+_One of Type_ ⇒ _Mixin Type_
+
+In order to specify _[Nested Member Types][]_ after a _Block Description_, a _One Of Type_  MUST use an appropriate
+_[Member Type Separator][]_ to indicate the end of the _Block Description_ and the beginning
+of the _[Nested Member Types][]_ list.
+
+```
+- first_name
+- One Of
+  - last_name
+  - One of
+    - given_name: Smith
+    _ suffixed_name: Smith, Sr.
+```
+
+Implies values with a structure of:
+
+```
+- first_name
+- last_name
+```
+
+Or:
+
+```
+- first_name
+- given_name: Smith
+```
+
+Or:
+
+```
+- first_name
+- suffixed_name: Smith, Sr.
+```
+
+## 5.3 Member Type Precedence
+Implementers of tooling for MSON structures SHOULD use an inheritance precedence such that the last redundant
+_[Member Type][]_ specified in a list at the same indentation level appends or overrides a previously defined
+_[Member Type][]_.
+
+```
+# Person (object, fixed)
+- first_name
+- last_name
+- address (object)
+```
+
+- Add/Override Attributes
+
+    ```
+    - person (Person)
+      - last_name (optional)
+    ```
+
+    Is literally the same as:
+
+    ```
+    - person (object, fixed)
+      - first_name (fixed)
+      - last_name (fixed)
+      - address (object, fixed)
+      - last_name (optional)
+    ```
+
+    Which implies a structure the same as:
+
+    ```
+    - person (object, fixed)
+      - first_name (fixed)
+      - last_name (optional)
+      - address (object, fixed)
+    ```
+    ---
+    ```
+    - person (object)
+        - first_name (optional)
+        - Include Person
+    ```
+
+    Is literally the same as:
+
+    ```
+    - person (object, fixed)
+      - first_name (optional)
+      - first_name (fixed)
+      - last_name (fixed)
+      - address (object, fixed)
+    ```
+
+    Which implies a structure the same as:
+
+    ```
+    - person (object, fixed)
+      - first_name (fixed)
+      - last_name (fixed)
+      - address (object, fixed)
+    ```
+    ---
+    ```
+    - person (object)
+      - Include Person
+      - first_name (optional)
+
+    ```
+
+    Is literally the same as:
+
+    ```
+    - person (object, fixed)
+      - first_name (fixed)
+      - last_name (fixed)
+      - address (object, fixed)
+      - first_name (optional)
+    ```
+
+    Implies a structure the same as:
+
+    ```
+    - person (object)
+      - first_name (optional)
+      - last_name (fixed)
+      - address (object, fixed)
+    ```
+
+- Add New Member Types
+
+    ```
+    - person (Person)
+      - citizenship
+    ```
+
+    Implies a structure the same as:
+
+    ```
+    - person (object, fixed)
+      - first_name
+      - last_name
+      - address (object)
+      - citizenship
+    ```
+
+- Override Member Types
+    ```
+     - person (object)
+       - Include Person
+       - address (string)
+     ```
+
+      Is literally the same as:
+
+     ```
+     - person (object, fixed)
+       - last_name (fixed)
+       - address (object, fixed)
+       - first_name (optional)
+       - address (string)
+     ```
+
+     Implies a structure the same as:
+
+     ```
+     - person (object)
+       - first_name (fixed)
+       - last_name (fixed)
+       - address (string)
+     ```
+
+## 6 Reserved Characters & Keywords
+When using following characters or keywords in an _Instance Name_, Literal Value or _Type Name_ the name or literal
+MUST be enclosed in backticks `` ` ``.
+
+### 6.1 Characters
+
+`:`, `(`,`)`, `<`, `>`, `{`, `}`, `[`, `]`, `_`, `*`, `-`, `+`, `` ` ``
+
+## 6.2 Keywords
+
+`Element`, `Elements`, `Property`, `Properties`, `Item`, `Items`, `Member`, `Members`, `Include`, `One of`
+
+Note keywords are case-insensitive.
+
+### 6.3 Additional Keywords
 Following keywords are reserved for future use:
 
-`Trait`, `Traits`, `Parameter`, `Parameters`, `Attribute`, `Attributes`, `Filter`, `Validation`, `Choice`, `Choices` `One of`, `Enumeration`, `Enum`, `Object`, `Array`
+`Trait`, `Traits`, `Parameter`, `Parameters`, `Attribute`, `Attributes`, `Filter`, `Validation`, `Choice`, `Choices`,
+`Enumeration`, `Enum`, `Object`, `Array`
+
+[RFC2119]: https://www.ietf.org/rfc/rfc2119
+[Base Type]: #2-base-types
+[Base Types]: #2-base-types
+[Primitive]: #21-primitive-types
+[Primitive Type]: #21-primitive-types
+[Primitive Types]: #21-primitive-types
+[Structure Type]: #22-structure-types
+[Structure Types]: #22-structure-types
+
+[Member Type]: #3-member-types
+[Member Types]: #3-member-types
+[Property Member Type]: #31-property-member-type
+[Property Member Types]: #31-property-member-type
+[Property Name]: #311-property-name
+[Value Member Type]: #32-value-member-type
+[Value Member Types]: #32-value-member-type
+[Value Definition]: #321-value-definition
+[Value Definitions]: #321-value-definition
+[Value]: #322-value
+[Values]: #322-value
+[Literal Value]: #3221-literal-value
+[Variable Value]: #3222-variable-value
+[Type Definition]: #323-type-definition
+[Type Definitions]: #323-type-definition
+[Type Specification]: #3231-type-specification
+[Type Specifications]: #3231-type-specification
+[Type Name]: #3232-type-name
+[Type Names]: #3232-type-name
+[Type Attribute]: #3233-type-attribute
+[Type Attributes]: #3233-type-attribute
+[Description]: #324-description
+[Descriptions]: #324-description
+[Block Description]: #3241-block-description
+[Block Descriptions]: #3241-block-description
+[Sample]: #325-samples
+[Samples]: #325-samples
+[Validation]: #326-validations
+[Validations]: #326-validations
+[Nested Member Type]: #33-nested-member-types
+[Nested Member Types]: #33-nested-member-types
+[Member Type Separator]: #331-member-type-separator
+
+[Named Type]: #4-named-types
+[Named Types]: #4-named-types
+[Type Inheritance]: #5-type-inheritance
+[Mixin Type]: #51-mixin-inheritance
+[One Of Type]: #52-one-of-type
+[Reserved Characters & Keywords]: #6-reserved-characters--keywords
