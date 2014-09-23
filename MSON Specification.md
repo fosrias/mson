@@ -42,7 +42,6 @@ combinations thereof built from a limited set of _[Base Types][]_:
 - A `code span` indicates literal words and punctuations
 - A pipe character (|) separates alternative grammar productions
 - A following _[opt]_ indicates optional syntactic categories and literals
-- Grammar productions can span several lines and end at another grammar production and/or the end of a paragraph
 
 ### 1.1 Markdown Syntax
 Note this reference is using ATX-style headers (#) and hyphens-style lists (-) exclusively. However you MAY use
@@ -79,7 +78,7 @@ directly, or indirectly, from _Structure Types_ MAY contain _[Nested Member Type
 
 - `array` or `Array`
 
-    Specifies an un-ordered list of items for values.
+    Specifies a list of items for values.
 
 - `enum` or `Enum`
 
@@ -211,9 +210,6 @@ Literal value of a type instance. Some limitations apply (see [Reserved Characte
 ```
 5
 ```
-
-A _[Value][]_ in a _[Value Definition][]_ with an unspecified type MAY imply the type of the related _[Member Type][]_,
-for example `number` in this example.
 
 ##### 3.2.2.2 Variable Value
 Defines a _[Value][]_ that is not concrete and specifies a variable _[Property Name][]_ or sample value
@@ -616,6 +612,8 @@ defined in the inherited _[Named Type][]_ are added at the same indentation leve
 
 _Mixin Type_ → `- Include` _[Type Name][]_ | `- Include` _[Type Definition][]_
 
+_Example 1_
+
 ```
 # Person (object)
 - first_name
@@ -638,7 +636,9 @@ Implies the same structure as:
     - first_name
     - last_name
 ```
----
+
+_Example 2_
+
 Alternately:
 
 ```
