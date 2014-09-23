@@ -201,7 +201,7 @@ green, red
 ```
 
 Defines sample values for an `array` type structures or fully-qualified values for an `enum` type
-structure. A _Values List_ MUST only be used with an `array` or `enum` _Structure Type_ or a _[Custom Type][]_ derived
+structure. A _Values List_ MUST only be used with an `array` or `enum` _Structure Type_ or a _[Named Type][]_ derived
 from a _Structure Type_.
 
 ##### 3.2.2.1 Literal Value
@@ -248,12 +248,12 @@ A _Type Definition_ MUST separate multiple items with a `,`.
 
 ##### 3.2.3.1 Type Specification
 
-_Type Specification_ → _[Type Name][]_ | _[Type Name][]_`[`_Type Name List_`]`
+_Type Specification_ → _[Type Name][]_ | _[Type Name][]_`[`_Nested Type Name List_`]`
 
 _Nested Type Name List_ →  _[Type Name][]_ | _[Type Name][]_`,` _Nested Type Name List_
 
 An `array` or `enum` _[Value Definition][]_ MAY specify the _Type Specifications_ of implied
-_[Nested Member Types][]_ members in-line using `[]` as a _Nested Type Name List.
+_[Nested Member Types][]_ members in-line using `[]` as a _Nested Type Name List_.
 
 ```
 array[number, string]
@@ -340,7 +340,7 @@ Describes a _[Member Type][]_ in-line.
 _Description_ → `-` _Markdown-formatted text_
 
 ```
-- name: Andrew (string) - <A Description>
+- name: Andrew (string) - A Description
 ```
 
 ##### 3.2.4.1 Block Description
@@ -351,7 +351,7 @@ _Block Description_ → _Markdown-formatted text_
 Markdown lists that are part of a _[Block Description][]_ are considered part of the block text.
 
 ```
-- name: Andrew (string) - <A Description>
+- name: Andrew (string) - A Description
 
     An additional
     multi-line description
@@ -377,7 +377,7 @@ _Sample_ ⇒ _Markdown-formatted text_
 ```
 
 #### 3.2.6 Validations
-To Be Decided.
+Reserved for future use.
 
 ### 3.3 Nested Member Types
 _[Named Types][]_ and _[Member Types][]_ directly, or indirectly, built from _[Structure Types][]_ MAY contain
@@ -525,9 +525,9 @@ _Named Type_ ⇒ _[Nested Member Types][]_ _[opt]_
 
 _Named Type_ ⇒ _[Named Member Types Group][]_ _[opt]_
 
-_Named Type  ⇒ _[Sample][]_
+_Named Type_  ⇒ _[Sample][]_
 
-_Named Type  ⇒ _[Validations][]_
+_Named Type_  ⇒ _[Validations][]_
 
 The above order of optional sections MUST be followed. _[Nested Member Types][]_ SHOULD be justified with the
 related header.
@@ -553,7 +553,7 @@ the associated _[Named Type][]_.
     _[Nested Member Types][]_ MAY be used without a _Named Member Types Group_ in a _[Named Type][]_.
 
     ```
-    # Person (object) - Just and ordinary person
+    # Person (object)
     - first_name
     - last_name
     ```
@@ -576,9 +576,8 @@ Defines a type that allows a variable _[Type Specification][]_ to be specified f
 ```
 # One or Many (enum[*T*])
 - (T)
-- array(T)
+- (array[T])
 ```
-
 
 ## 5 Type Inheritance
 A _[Member Type][]_ or _[Named Type][]_ that inherits from another _[Named Type][]_ also inherits any
@@ -598,7 +597,7 @@ And:
   - address
 ```
 
-Implies the same structure:
+Implies the same structure as:
 
 ```
 - person (object)
@@ -613,9 +612,7 @@ Where the inherited _[Member Types][]_ from `Person` _[Named Type][]_ are listed
 MSON defines a _Mixin Type_ that supports multiple inheritance from another _[Named Type][]_. _[Nested Member Types][]_
 defined in the inherited _[Named Type][]_ are added at the same indentation level of the _Mixin Type_.
 
-_Mixin Type_ → `- Include` _[Type Name][]_ | `- Include` _[Type Definition][]_ | _Mixin Type_ `-` _[Description][]_
-
-_Mixin Type_ ⇒ _[Block Description][]_
+_Mixin Type_ → `- Include` _[Type Name][]_ | `- Include` _[Type Definition][]_
 
 ```
 # Person (object)
@@ -661,11 +658,9 @@ Implies the same structure as:
 MSON defines a _One Of Type_ that can be used to describe mutually exclusive sets of _[Nested Member Types][]_. A
 _One of Type_ MUST only be used to define _[Property Member Types][]_ for a `object` type structure.
 
-_One of Type_ → `- One Of` | `- One Of` - _[Description][]_
+_One of Type_ → `- One Of`
 
-_One of Type_ ⇒ _[Block Description][]_
-
-_One of Type_ ⇒ _[Nested Member Types][]_.
+_One of Type_ ⇒ _[Nested Member Types][]_
 
 _One of Type_ ⇒ _Mixin Type_
 
@@ -679,7 +674,7 @@ of the _[Nested Member Types][]_ list.
   - last_name
   - One of
     - given_name: Smith
-    _ suffixed_name: Smith, Sr.
+    - suffixed_name: Smith, Sr.
 ```
 
 Implies values with a structure of:
@@ -836,7 +831,7 @@ _[Member Type][]_.
      ```
 
 ## 6 Reserved Characters & Keywords
-When using following characters or keywords in an _Instance Name_, Literal Value or _Type Name_ the name or literal
+When using following characters or keywords in an _Property Name_, Literal Value or _Type Name_ the name or literal
 MUST be enclosed in backticks `` ` ``.
 
 ### 6.1 Characters
@@ -845,7 +840,7 @@ MUST be enclosed in backticks `` ` ``.
 
 ## 6.2 Keywords
 
-`Element`, `Elements`, `Property`, `Properties`, `Item`, `Items`, `Member`, `Members`, `Include`, `One of`
+`Property`, `Properties`, `Item`, `Items`, `Member`, `Members`, `Include`, `One of`
 
 Note keywords are case-insensitive.
 
@@ -853,7 +848,7 @@ Note keywords are case-insensitive.
 Following keywords are reserved for future use:
 
 `Trait`, `Traits`, `Parameter`, `Parameters`, `Attribute`, `Attributes`, `Filter`, `Validation`, `Choice`, `Choices`,
-`Enumeration`, `Enum`, `Object`, `Array`
+`Enumeration`, `Enum`, `Object`, `Array`, `Element`, `Elements`
 
 [RFC2119]: https://www.ietf.org/rfc/rfc2119
 [Base Type]: #2-base-types
@@ -899,6 +894,7 @@ Following keywords are reserved for future use:
 
 [Named Type]: #4-named-types
 [Named Types]: #4-named-types
+[Named Member Types Group]: #41-named-member-types-group
 [Type Inheritance]: #5-type-inheritance
 [Mixin Type]: #51-mixin-inheritance
 [One Of Type]: #52-one-of-type
