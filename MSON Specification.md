@@ -136,7 +136,7 @@ implied `object` structure.
 #### 3.1.1 Property Name
 Defines the name of a property in an `object` type structure.
 
-_Property Name_ → _[Literal Value][]_ | _[Variable Value][]_
+_Property Name_ → _[Literal Value][]_ | _[Variable Property Name][]_
 
 ```
 - customer (object)
@@ -147,9 +147,22 @@ Defines a _[Property Member Type][]_ with a _Property Name_ "customer".
 ```
 - *rel* (string)
 ```
-When a _Property Name_ is a _[Variable Value][]_, it indicates a property MAY have an arbitrary name and the
+When a _Property Name_ is a _[Variable Property Name][]_, it indicates a property MAY have an arbitrary name and the
 specified _Property Name_ is then a sample. In the prior example, a _Property Member Type_ for a `string` type is defined
 with an arbitrary name and a sample value of "rel".
+
+#### 3.1.1.1 Variable Property Name
+
+_Variable Property Name_ → `*`_[Value Definition][]_`*`
+
+In the case of specifying a _[Variable Property Name][]_, the _Value Definition][]_ MAY reference a _[Named Type][]_
+that MUST inherit from a `string` type, e.g. to specify a pattern for the variable value.
+
+```
+*rel (Custom String)* (object)
+```
+
+Where `rel` is a sample value for the _[Property Name][]_ of a _[Property Member Type][]_.
 
 ### 3.2 Value Member Type
 Defines value type structures. A _Value Type Member_ MUST only be used to define structures of `array` or `enum`
@@ -215,20 +228,11 @@ Literal value of a type instance. Some limitations apply (see [Reserved Characte
 Defines a _[Value][]_ that is not concrete and specifies a variable _[Property Name][]_ or sample value
 indicated using Markdown *italics*.
 
-_Variable Value_ → `*`_[Literal Value][]_`*` | `*`_[Value Definition][]_`*`
+_Variable Value_ → `*`_[Literal Value][]_`*`
 
 ```
 *rel*
 ```
-
-In the case of specifying a variable _[Property Name][]_, the _Variable Value_ MAY reference a _[Named Type][]_
-that MUST inherit from a `string` type, e.g. to specify a pattern for the variable value.
-
-```
-*rel (Custom String)* (object)
-```
-
-Where `rel` is a sample value for the _[Property Name][]_ of a _[Property Member Type][]_.
 
 #### 3.2.3 Type Definition
 Explicitly specifies the type of an value in an MSON instance.
@@ -890,6 +894,7 @@ Following keywords are reserved for future use:
 [Property Member Type]: #31-property-member-type
 [Property Member Types]: #31-property-member-type
 [Property Name]: #311-property-name
+[Variable Property Name]: #3111-variable-property-name
 [Value Member Type]: #32-value-member-type
 [Value Member Types]: #32-value-member-type
 [Value Definition]: #321-value-definition
