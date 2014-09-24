@@ -286,8 +286,8 @@ the `fixed` attribute as well.
         - name (fixed)
     ```
 
-- An `array` based _[Named Type][]_ or _[Member Type][]_ MAY specify `fixed` to indicate the structure is a "fixed list" of
-  only the specified values, if any, of its _[Nested Member Types][]_.
+- An `array` based _[Named Type][]_ or _[Member Type][]_ MAY specify `fixed` to indicate the structure is a
+"fixed ordererd list" of only the specified values and/or types, if any, of its _[Nested Member Types][]_.
 
     ```
     - colors (array, fixed)
@@ -295,11 +295,20 @@ the `fixed` attribute as well.
         - green
     ```
 
-    Implies a fixed-list `array` structure that MUST only contain the two items "red" and "green".
+    Implies a fixed-list `array` structure that MUST only contain the two items "red" and "green" in that order.
+
+    ```
+    - components (array, fixed)
+        - (object)
+        - (string)
+    ```
+
+    Implies a fixed-list `array` structure that MUST only contain the two items of an arbitrary `object` and `string`
+    in that order.
 
 - An `object` based _[Named Type][]_ or _[Member Type][]_ MAY specify `fixed` to indicate a "value object" where all
 the properties MUST be present and the values of the properties MUST be the values specified, if any, in its
-_[Nested Member Types][]_.
+_[Nested Member Types][]_. Further, such an `object` type structure MUST NOT contain any other properties.
 
     ```
     - person (object, fixed)
@@ -307,8 +316,16 @@ _[Nested Member Types][]_.
         - last_name: Smith
     ```
 
-    Implies a "value object" that MUST contain the properties "first_name" and "last_name" with the values
+    Implies a "value object" that MUST contain only the properties "first_name" and "last_name" with the values
     "Andrew" and "Smith", respectively.
+
+    ```
+    - person (object, fixed)
+        - first_name
+        - last_name
+    ```
+
+    Implies an `object` that MUST contain only the properties "first_name" and "last_name", respectively.
 
 - Individual _[Nested Member Types][]_ MAY override inherited behavior from a `fixed` inherited type
 by using an `optional` attribute and/or MAY indicate values are samples using a _[Variable Value][]_.
@@ -360,7 +377,7 @@ Markdown lists that are part of a _[Block Description][]_ are considered part of
 Note that `here` and `there` are NOT _[Member Types][]_ but rather are part of a Markdown list in the
 _Block Description_.
 
-#### 3.2.5 Samples
+#### 3.2.5 Sample
 Defines alternate sample _[Values][]_ for _[Member Types][]_ as a nested Markdown list with (multi-line) text.
 
 _Sample_ → `- Sample`
@@ -849,7 +866,7 @@ MUST be enclosed in backticks `` ` ``.
 
 ## 6.2 Keywords
 
-`Property`, `Properties`, `Item`, `Items`, `Member`, `Members`, `Include`, `One of`
+`Property`, `Properties`, `Item`, `Items`, `Member`, `Members`, `Include`, `One of`, `Sample`
 
 Note keywords are case-insensitive.
 
@@ -857,7 +874,7 @@ Note keywords are case-insensitive.
 Following keywords are reserved for future use:
 
 `Trait`, `Traits`, `Parameter`, `Parameters`, `Attribute`, `Attributes`, `Filter`, `Validation`, `Choice`, `Choices`,
-`Enumeration`, `Enum`, `Object`, `Array`, `Element`, `Elements`
+`Enumeration`, `Enum`, `Object`, `Array`, `Element`, `Elements`, `Description`
 
 [RFC2119]: https://www.ietf.org/rfc/rfc2119
 [Base Type]: #2-base-types
@@ -893,8 +910,8 @@ Following keywords are reserved for future use:
 [Descriptions]: #324-description
 [Block Description]: #3241-block-description
 [Block Descriptions]: #3241-block-description
-[Sample]: #325-samples
-[Samples]: #325-samples
+[Sample]: #325-sample
+[Samples]: #325-sample
 [Validation]: #326-validations
 [Validations]: #326-validations
 [Nested Member Type]: #33-nested-member-types
