@@ -386,12 +386,17 @@ Defines alternate sample _[Values][]_ for _[Member Types][]_ as a nested Markdow
 
 _Sample_ → `- Sample`
 
-_Sample_ ⇒ _Markdown-formatted text_
+_Sample_ ⇒ _Markdown-formatted text_ | _[Value Member Types][]_
+
+A _[Member Type][]_ MAY have multiple _Sample_ lists.
 
 ```
 - colors (array)
   - Sample
-    red
+      - red
+  - Sample
+      - blue
+      - green
 ```
 
 #### 3.2.6 Validations
