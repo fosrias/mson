@@ -59,10 +59,10 @@ Link object specifies a link to a target resource.
 
 - `hreflang` (string) - A BCP 47 language tag identifying the language of the target resource
 
-## One or many (enum): T
+## One or many (one of): T
 The generic type `One or many` allows to model a data type that either contains a single entry of a given type or a collection of elements of the same type.
 
-### Members
+### Choices
 - (T)
 - (array: T)
 
