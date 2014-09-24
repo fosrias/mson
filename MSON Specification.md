@@ -594,14 +594,68 @@ the associated _[Named Type][]_.
     - last_name
     ```
 
-### 4.3 Generic Named Types
-Defines a type that allows a variable _[Type Specification][]_ to be specified for the _[Named Type][]_.
+### 4.3 Generic Named Type
+Defines a type that allows an italicized _Type Variable_ to represent a _[Type Name][]_ in a _[Type Specification][]_
+for the _Generic Named Type_. A _Type Variable_ MAY be used to indicate any _[Type Name][]_ in a
+_[Type Specification][].
 
-```
-# One or Many (enum[*T*])
-- (T)
-- (array[T])
-```
+A _Type Variable_ MAY only pass to explicitly defined _[Nested Member Types][]_ in the _Generic Named Type_ and MUST
+not define any implied _[Nested Member Types][]_.
+
+_Generic Named Type_ → `#` _[Type Name][]_ (
+
+_Variable Type Specification_ → *_Type Variable_*
+
+_Type Variable_ → _[Literal Value][]_
+
+- Inherited type as a variable
+
+    ```
+     # Address Decorator (*T*)
+        - address
+
+    # Person (object)
+        - first_name
+        - last_name
+    ```
+
+    And:
+
+    ```
+    - decorated_person (Address Decorator(Person))
+    ```
+
+    Implies the same structure as:
+
+    ```
+    - decorated_person (object)
+        - first_name
+        - last_name
+        - address
+    ```
+
+- Type passed into explicitly defined _[Member Types][]_
+
+    ```
+    # One or Many (*S*[*T*, string])
+    - (T)
+    - (array[T])
+    ```
+
+    And:
+
+    ```
+    - rel (One or Many(enum, object))
+    ```
+
+    Implies the same structure as:
+
+    ```
+    - rel (enum)
+        - (object)
+        - array(object)
+        - (string)
+    ```
 
 ## 5 Type Inheritance
 A _[Member Type][]_ or _[Named Type][]_ that inherits from another _[Named Type][]_ also inherits any
