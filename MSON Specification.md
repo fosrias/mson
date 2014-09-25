@@ -53,12 +53,12 @@ The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "S
 
 ## 2 Base Types
 MSON defines a number of distinct base _[Primitive][]_ and _[Structure Types][]_ from which all MSON data structures are
-built. Users may extend these [Base Types][] to define new [Named Types][] that MAY be used to build other
-[Named Types][] and/or [Member Types][].
+built (sub-typed). Users may extend these [Base Types][] to define new [Named Types][] that MAY be used to build
+other [Named Types][] and/or [Member Types][].
 
 #### 2.1 Primitive Types
-Applies to basic data structure and type definitions. _[Named Types][]_ and _[Member Types][]_ built directly, or
-indirectly, from _Primitive Types_ MUST NOT contain _[Nested Member Types][]_.
+Applies to basic data structure and type definitions. _[Named Types][]_ and _[Member Types][]_ that are sub-typed from
+_Primitive Types_ MUST NOT contain _[Nested Member Types][]_.
 
 - `boolean` or `Boolean`
 
@@ -73,8 +73,8 @@ indirectly, from _Primitive Types_ MUST NOT contain _[Nested Member Types][]_.
     Specifies any number.
 
 #### 2.2 Structure Types
-Applies to recursive, composite data structure and type definitions. _[Named Types][]_ and _[Member Types][]_ built
-directly, or indirectly, from _Structure Types_ MAY contain _[Nested Member Types][]_.
+Applies to recursive, composite data structure and type definitions. _[Named Types][]_ and _[Member Types][]_ that are
+sub-typed from _Structure Types_ MAY contain _[Nested Member Types][]_.
 
 - `array` or `Array`
 
@@ -152,11 +152,13 @@ specified _Property Name_ is then a sample. In the prior example, a _Property Me
 with an arbitrary name and a sample value of "rel".
 
 #### 3.1.1.1 Variable Property Name
+Defines a _[Property Name][]_ that is associated with a specific _[Value Definition][]_ in an `object` type structure
+that could be any arbitrary name in an actual implementation.
 
 _Variable Property Name_ → `*`_[Value Definition][]_`*`
 
-In the case of specifying a _[Variable Property Name][]_, the _Value Definition][]_ MAY reference a _[Named Type][]_
-that MUST inherit from a `string` type, e.g. to specify a pattern for the variable value.
+In the case of specifying a _[Variable Property Name][]_, the _[Value Definition][]_ MAY reference a _[Named Type][]_
+that MUST be sub-typed from a `string` _[Primitive Type][]_, e.g. to specify a pattern for the variable value.
 
 ```
 *rel (Custom String)* (object)
@@ -177,7 +179,7 @@ _Value Member Type_ ⇒ _[Nested Member Types][]_ _[opt]_
 _Value Member Type_ ⇒ _[Samples][]_ _[opt]_
 
 ```
-- colors (array)
+- (array)
     - red (string) - A sample value
     - green (string)
 ```
@@ -225,7 +227,7 @@ Literal value of a type instance. Some limitations apply (see [Reserved Characte
 ```
 
 ##### 3.2.2.2 Variable Value
-Defines a _[Value][]_ that is not concrete and specifies a variable _[Property Name][]_ or sample value
+Defines a _[Value][]_ that is not concrete and specifies a _[Variable Property Name][]_ or sample value
 indicated using Markdown *italics*.
 
 _Variable Value_ → `*`_[Literal Value][]_`*`
@@ -597,7 +599,7 @@ the associated _[Named Type][]_.
 ### 4.3 Generic Named Type
 Defines a type that allows an italicized _Type Variable_ to represent a _[Type Name][]_ in a _[Type Specification][]_
 for the _Generic Named Type_. A _Type Variable_ MAY be used to indicate any _[Type Name][]_ in a
-_[Type Specification][].
+_[Type Specification][]_.
 
 A _Type Variable_ MAY only pass to explicitly defined _[Nested Member Types][]_ in the _Generic Named Type_ and MUST
 not define any implied _[Nested Member Types][]_.
