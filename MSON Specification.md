@@ -268,6 +268,16 @@ Indicates a `array` type structure MAY include distinct numbers or strings as va
 References the name of a type in _[Base Types][]_ or _[Named Types][]_. Some limitations apply (see
 [Reserved Characters & Keywords][]).
 
+_Type Name_ → _[Literal Value][]_ | _[Type Name Variable][]_
+
+A _[Type Name Variable][]_ MUST only be used for a _Type Name_ in a _[Type Definition]_ for a _[Generic Named Type][]_
+and MAY be used in a _[Type Definition][]_ in _[Nested Member Types][]_ of a _[Generic Named Type][]_.
+
+###### 3.2.3.2.1 Type Name Variable
+A variable that may be used in place of a _[Type Name][]_ for _[Type Definition][]_ in a _[Generic Named Type[]_.
+
+_Type Name Variable_ → *_[Literal Value][]_*
+
 ##### 3.2.3.3 Type Attribute
 Defines extra attributes associated with the implementation of a type.
 
@@ -368,7 +378,8 @@ Describes an _[Named Type][]_ or a _[Member Type][]_ with a nested (multi-line) 
 
 _Block Description_ → _Markdown-formatted text_
 
-Markdown lists that are part of a _[Block Description][]_ are considered part of the block text.
+A _Block Descripton_ MUST be located directly under a _[Member Type][]_ or _[Named Type][]_ definition. Markdown lists
+that are part of a _[Block Description][]_ are considered part of the block text.
 
 ```
 - name: Andrew (string) - A Description
@@ -597,18 +608,15 @@ the associated _[Named Type][]_.
     ```
 
 ### 4.3 Generic Named Type
-Defines a type that allows an italicized _Type Variable_ to represent a _[Type Name][]_ in a _[Type Specification][]_
-for the _Generic Named Type_. A _Type Variable_ MAY be used to indicate any _[Type Name][]_ in a
-_[Type Specification][]_.
+Defines a _[Named Type][]_ that allows an italicized _Type Name Variable_ to represent a _[Type Name][]_
+ at any location in a _[Type Specification][]_.
 
-A _Type Variable_ MAY only pass to explicitly defined _[Nested Member Types][]_ in the _Generic Named Type_ and MUST
-not define any implied _[Nested Member Types][]_.
+_Generic Named Type_ → _[Named Type][]_
 
-_Generic Named Type_ → `#` _[Type Name][]_ (
-
-_Variable Type Specification_ → *_Type Variable_*
-
-_Type Variable_ → _[Literal Value][]_
+By default:
+- A _[Named Type][]_ that contains at least one _[Name Type Variable][]_ is a _Generic Named Type_.
+- A _Type Name Variable_ in a _[Type Specification][]_ MAY only be used in the _[Type Definition][]_ of explicitly
+defined_[Nested Member Types][]_ in the _Generic Named Type_ and MUST NOT define any implied _[Nested Member Types][]_.
 
 - Inherited type as a variable
 
@@ -640,8 +648,8 @@ _Type Variable_ → _[Literal Value][]_
 
     ```
     # One or Many (*S*[*T*, string])
-    - (T)
-    - (array[T])
+    - (*T*)
+    - (array[*T*])
     ```
 
     And:
@@ -654,9 +662,9 @@ _Type Variable_ → _[Literal Value][]_
 
     ```
     - rel (enum)
+        - (string)
         - (object)
         - array(object)
-        - (string)
     ```
 
 ## 5 Type Inheritance
