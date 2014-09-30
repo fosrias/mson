@@ -397,7 +397,7 @@ _Block Description_.
 #### 3.2.5 Sample
 Defines alternate sample _[Values][]_ for _[Member Types][]_ as a nested Markdown list with (multi-line) text.
 
-_Sample_ → `- Sample`
+_Sample_ → `- Sample` | `## Sample`
 
 _Sample_ ⇒ _Markdown-formatted text_ | _[Value Member Types][]_
 
@@ -422,14 +422,10 @@ _Nested Member Types_, which are defined using nested Markdown lists of allowed 
 A _[Member Type][]_ that contains _Nested Member Types_ defines an inner, anonymous type that specifies the structure
 of values of that particular member.
 
-_Nested Member Types_ → _nested Markdown-formatted lists of_ _[Member Types][]_ | _Member Type Group_
-
-_Member Type Group_ → `-` _[Member Type Separator][]_
-
-_Member Type Group_ ⇒ _Nested Member Types_
+_Nested Member Types_ → _nested Markdown-formatted lists of_ _[Member Types][]_
 
 In order to specify _[Nested Member Types][]_ after a _Block Description_, a _[Named Type][]_ or a _[Member Type][]_
-MUST use an appropriate _[Member Type Separator][]_ to indicate the end of the _Block Description_ and the beginning
+MUST use an appropriate _[Member Type Group][]_ to indicate the end of the _Block Description_ and the beginning
 of the _Nested Member Types_ list.
 
 - Named Type
@@ -540,7 +536,17 @@ By Default:
     Implies Implies a `colors` _[Property Member Type][]_ that MUST have either the string "red" or any number as
     a value, where "5" is a sample of a `number` value.
 
-#### 3.3.1 Member Type Separator
+#### 3.3.1
+A _Member Type Group_ delineates a _[Nested Member Types][]_ section in _[Named Types][]_ or _[Member Types][]_
+declaration.
+
+_Member Type Group_ → `-` _[Member Type Separator][]_ | `##` _[Member Type Separator][]_
+
+_Member Type Group_ ⇒ _Nested Member Types_
+
+
+
+##### 3.3.1.1 Member Type Separator
 Defines the names of separators to indicate the beginning of a section of _[Nested Member Types][]_.
 
 _Member Type Separator_ →  `Items` | `Members` | `Properties`
@@ -928,6 +934,70 @@ _[Member Type][]_.
         - last_name (fixed)
         - address (string)
     ```
+
+## 6 Type Declaration Ordering
+In MSON, a _Type Declaration_ specifies _[Named Types][]_ and/or list-defined _[Member Types][]_. These
+_Type Declarations_ MAY also include any _[Block Declaration][]_, _[Nested Member Types][]_, _[Member Type Groups][]_,
+_[Sample][]_ and/or _[Validations][]_ _Type Sub-declarations_.
+
+_Type Declarations_ → _[Named Types][]_ | _[Member Types][]_
+
+_Type Declarations_ ⇒ _Type Sub-declarations_ _[opt]_
+
+_Type Sub-declarations_ → _[Block Description][]_ | _[Nested Member Types][]_ | _[Member Type Group][]_ | _[Sample][]_ | _[Validations][]_
+
+- Named Types
+
+    ```
+    # Person (object)
+    A person.
+
+    ## Properties
+    - first_name
+    - last_name
+    - address
+        - city
+        - street
+    ## Sample
+    ...
+
+    ## Validations
+    ...
+    ```
+
+- Member Types
+
+    ```
+    - person (object) - A person
+        - Properties
+            - first_name
+            - last_name
+            - address
+                - city
+                - street
+        - Sample
+            ...
+        - Validations
+            ...
+    ```
+
+    or, equivalently:
+
+    ```
+    - person (Person) - A person
+    ```
+
+MSON expands _Type Declarations_ using _Type Sub-declarations_ that follow a few simple rules with respect to format
+and order.
+
+Format Rules:
+- _Type Sub-declarations_ in _[Named Types][]_ MUST use a header-defined variation, if one exists.
+
+
+Order Rules:
+- A _[Block Description][]_, if present, MUST immediately follow _[Type Declarations][]_.
+- _[Nested Member Types][]_ that are located after other _Type Sub-declarations_ MUST explicitly use an appropriate
+
 
 ## 6 Reserved Characters & Keywords
 When using following characters or keywords in an _Property Name_, Literal Value or _Type Name_ the name or literal
